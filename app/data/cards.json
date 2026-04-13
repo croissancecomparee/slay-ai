@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Strike",
+    "cost": 1,
+    "damage": 6,
+    "block": 0,
+    "draw": 0,
+    "type_card": "attack"
+  },
+  {
+    "name": "Defend",
+    "cost": 1,
+    "damage": 0,
+    "block": 5,
+    "draw": 0,
+    "type_card": "skill"
+  }
+]
