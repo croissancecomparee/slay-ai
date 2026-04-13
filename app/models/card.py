@@ -4,7 +4,20 @@ class Card:
     Les cartes peuvent être utilisées par le joueur pour infliger des dégâts aux ennemis, se protéger contre les attaques ennemies, ou piocher des cartes supplémentaires.
     Les cartes peuvent également avoir des effets spéciaux, comme infliger des dégâts supplémentaires si le joueur a déjà joué une carte d'attaque ce tour-ci, ou donner un bonus de bloc si le joueur a déjà joué une carte de compétence ce tour-ci.
     '''
-    def __init__(self, name, cost, damage=0, block=0, draw=0, type_card=None):
+    def __init__(
+        self,
+        name:str,
+        cost: int,
+        damage: int=0, 
+        block:int=0,
+        draw:int=0,
+        type_card:str=None, #attack, skill, power
+        tags:list[str]=None,
+        character:str=None, #ironclad, silent, defect...
+        rarity:str=None, #starter,common, uncommon, rare
+        description:str=None,
+        upgraded: dict=None,
+    ):
         '''
         Initialise une carte avec les paramètres donnés.
         '''
@@ -14,3 +27,10 @@ class Card:
         self.block = block
         self.draw = draw
         self.type_card = type_card
+        self.tags = tags
+        self.character = character
+        self.rarity = rarity
+        self.description = description
+        self.upgraded = upgraded
+
+   
