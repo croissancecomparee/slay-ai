@@ -30,5 +30,133 @@
       "block": 8,
       "description": "Gain 8 block."
     }
-  }
+  },
+  {
+    "name": "Bash",
+    "cost": 2,
+    "damage": 8,
+    "block": 0,
+    "draw": 0,
+    "type_card": "attack",
+    "tags": ["basic"],
+    "description": "Deal 8 damage. Apply 2 Vulnerable.",
+    "rarity": "common",
+    "character": "ironclad",
+    "upgraded": {
+      "damage": 10,
+      "description": "Deal 10 damage. Apply 3 Vulnerable."
+    }
+  },
+  {
+    "name": "Clash",
+    "cost": 0,
+    "damage": 14,
+    "block": 0,
+    "draw": 0,
+    "type_card": "attack",
+    "tags": ["basic"],
+    "description": "Deal 14 damage. Can only be played if every card in your hand is an Attack.",
+    "rarity": "common",
+    "character": "ironclad",
+    "upgraded": {
+      "damage": 18,
+      "description": "Deal 18 damage. Can only be played if every card in your hand is an Attack."
+    }
+  },
+    {
+        "name": "Cleave",
+        "cost": 1,
+        "damage": 8,
+        "block": 0,
+        "draw": 0,
+        "type_card": "attack",
+        "tags": ["basic"],
+        "description": "Deal 8 damage to ALL enemies.",
+        "rarity": "common",
+        "character": "ironclad",
+        "upgraded": {
+        "damage": 11,
+        "description": "Deal 11 damage to ALL enemies."
+        }
+    },
+    {
+        "name": "Pommel Strike",
+        "cost": 1,
+        "damage": 9,
+        "block": 0,
+        "draw": 1,
+        "type_card": "attack",
+        "tags": ["basic"],
+        "description": "Deal 9 damage. Draw 1 card.",
+        "rarity": "common",
+        "character": "ironclad",
+        "upgraded": {
+        "damage": 12,
+        "description": "Deal 12 damage. Draw 1 card."
+        }
+    },
+    {
+        "name": "Heavy Blade",
+        "cost": 2,
+        "damage": 14,
+        "block": 0,
+        "draw": 0,
+        "type_card": "attack",
+        "tags": ["basic"],
+        "description": "Deal 14 damage. Strength affects this card 3 times.",
+        "rarity": "common",
+        "character": "ironclad",
+        "upgraded": {
+        "damage": 18,
+        "description": "Deal 18 damage. Strength affects this card 3 times."
+        }
+    },
+    {
+        "name": "Twin Strike",
+        "cost": 1,
+        "damage": 5,
+        "block": 0,
+        "draw": 0,
+        "type_card": "attack",
+        "tags": ["basic"],
+        "description": "Deal 5 damage twice.",
+        "rarity": "common",
+        "character": "ironclad",
+        "upgraded": {
+        "damage": 7,
+        "description": "Deal 7 damage twice."
+        }
+    },
+    {
+        "name": "Uppercut",
+        "cost": 2,
+        "damage": 13,
+        "block": 0,
+        "draw": 0,
+        "type_card": "attack",
+        "tags": ["basic"],
+        "description": "Deal 13 damage. Apply 1 Weak and 1 Vulnerable.",
+        "rarity": "common",
+        "character": "ironclad",
+        "upgraded": {
+        "damage": 18,
+        "description": "Deal 18 damage. Apply 2 Weak and 2 Vulnerable."
+        }
+    },
+    {
+        "name": "Dropkick",
+        "cost": 1,
+        "damage": 7,
+        "block": 0,
+        "draw": 0,
+        "type_card": "attack",
+        "tags": ["basic"],
+        "description": "Deal 7 damage. If the enemy intends to attack, gain 2 Block.",
+        "rarity": "common",
+        "character": "ironclad",
+        "upgraded": {
+        "damage": 10,
+        "description": "Deal 10 damage. If the enemy intends to attack, gain 4 Block."
+        }
+    }
 ]
