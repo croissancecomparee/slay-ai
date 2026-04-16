@@ -4,41 +4,101 @@ import pandas as pd
 
 st.title("Slay The Spire Deck Analyzer")
 
+col_left, col_right = st.columns([2, 1])
+
+if "deck" not in st.session_state:
+    st.session_state.deck = {}
+
 # oour le moment on ne fait rien avec le personnage, mais on pourrait l'utiliser pour filtrer les cartes disponibles ou pour donner des conseils spécifiques à ce personnage.
 selected_character = st.selectbox(
     "Choose character",
     ["ironclad", "silent"]
 )
 
-# input for the deck
+
+# get all the cards
 response = requests.get("http://localhost:8000/cards")
 cards = response.json()
 
-card_names = [c["name"] for c in cards]
+# Liste des cartes:
+with col_left:
+    st.subheader("🃏 Available Cards")
 
-# on choisi le nombre de cartes:
-deck_dict = {}
+    search = st.text_input("Search card")
 
-st.subheader("Build your deck")
+    filtered_cards = [
+        c for c in cards
+        if search.lower() in c["name"].lower()
+    ]
 
-for card in card_names:
-    count = st.number_input(
-        f"{card}",
-        min_value=0,
-        max_value=10,
-        step=1,
-        key=card
-    )
-    if count > 0:
-        deck_dict[card] = count
+    for card in filtered_cards:
+        col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
-deck = []
-for card, count in deck_dict.items():
-    deck.extend([card] * count)
-# deck = st.multiselect("Select cards for your deck", card_names)
-# deck_input = st.text_area("Enter your deck (one card name per line)\n" \
-# "separated by commas\n" \
-# "Strike, Defend, Bash, etc.")
+        col1.write(f"{card['name']} (cost: {card['cost']}) [{card['type_card']}]")
+
+        if col2.button("+", key=f"add_{card['name']}"):
+            st.session_state.deck[card["name"]] = \
+                st.session_state.deck.get(card["name"], 0) + 1
+
+        if col3.button("-", key=f"remove_{card['name']}"):
+            if card["name"] in st.session_state.deck:
+                st.session_state.deck[card["name"]] -= 1
+                if st.session_state.deck[card["name"]] <= 0:
+                    del st.session_state.deck[card["name"]]
+
+        if col4.button("ℹ️", key=f"info_{card['name']}"):
+            selected_card = card["name"]
+            st.session_state.selected_card = selected_card
+
+            if "selected_card" not in st.session_state:
+                st.session_state.selected_card = None
+
+
+# Deck actuel du joueur:
+with col_right:
+    st.subheader("📦 Your Deck")
+
+    total_cards = sum(st.session_state.deck.values())
+    st.metric("Total cards", total_cards)
+
+    for card, count in st.session_state.deck.items():
+        st.write(f"{card} x{count}")
+
+with st.sidebar:
+    if st.session_state.selected_card:
+        st.subheader(f"📖 Card Details {st.session_state.selected_card}")
+
+        response = requests.get(
+            f"http://127.0.0.1:8000/cards/{st.session_state.selected_card}"
+        )
+
+        if response.status_code == 200:
+            card = response.json()
+
+            st.write(f"**Cost:** {card['cost']}")
+            st.write(f"**Type:** {card['type_card']}")
+            st.write(f"**Description:** {card['description']}")
+
+            st.write("**Stats:**")
+            st.write(f"Damage: {card['damage']}")
+            st.write(f"Block: {card['block']}")
+            st.write(f"Draw: {card['draw']}")
+
+            st.write("**Tags:**", ", ".join(card["tags"]))
+
+            st.markdown(
+                f"[View on wiki](https://slay-the-spire.fandom.com/wiki/{card['name']})"
+            )
+
+            if "upgraded" in card:
+                st.write("🔼 **Upgraded version:**")
+                st.write(card["upgraded"])
+
+deck_list = []
+
+for card, count in st.session_state.deck.items():
+    deck_list.extend([card] * count)
+
 
 if st.button("Analyze Deck"):
 
@@ -46,7 +106,7 @@ if st.button("Analyze Deck"):
     # deck = [card.strip() for card in deck_input.split(",")]
 
     # send the deck to the API for analysis
-    response = requests.post("http://localhost:8000/deck/analyze", json=deck)
+    response = requests.post("http://localhost:8000/deck/analyze", json=deck_list)
 
     if response.status_code == 200:
         stats = response.json()
