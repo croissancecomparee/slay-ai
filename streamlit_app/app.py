@@ -32,7 +32,7 @@ with col_left:
     ]
 
     for card in filtered_cards:
-        col1, col2, col3 = st.columns([3, 1, 1])
+        col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
         col1.write(f"{card['name']} (cost: {card['cost']}) [{card['type_card']}]")
 
@@ -46,6 +46,13 @@ with col_left:
                 if st.session_state.deck[card["name"]] <= 0:
                     del st.session_state.deck[card["name"]]
 
+        if col4.button("ℹ️", key=f"info_{card['name']}"):
+            selected_card = card["name"]
+            st.session_state.selected_card = selected_card
+
+            if "selected_card" not in st.session_state:
+                st.session_state.selected_card = None
+
 
 # Deck actuel du joueur:
 with col_right:
@@ -57,36 +64,41 @@ with col_right:
     for card, count in st.session_state.deck.items():
         st.write(f"{card} x{count}")
 
+with st.sidebar:
+    if st.session_state.selected_card:
+        st.subheader(f"📖 Card Details {st.session_state.selected_card}")
+
+        response = requests.get(
+            f"http://127.0.0.1:8000/cards/{st.session_state.selected_card}"
+        )
+
+        if response.status_code == 200:
+            card = response.json()
+
+            st.write(f"**Cost:** {card['cost']}")
+            st.write(f"**Type:** {card['type_card']}")
+            st.write(f"**Description:** {card['description']}")
+
+            st.write("**Stats:**")
+            st.write(f"Damage: {card['damage']}")
+            st.write(f"Block: {card['block']}")
+            st.write(f"Draw: {card['draw']}")
+
+            st.write("**Tags:**", ", ".join(card["tags"]))
+
+            st.markdown(
+                f"[View on wiki](https://slay-the-spire.fandom.com/wiki/{card['name']})"
+            )
+
+            if "upgraded" in card:
+                st.write("🔼 **Upgraded version:**")
+                st.write(card["upgraded"])
+
 deck_list = []
 
 for card, count in st.session_state.deck.items():
     deck_list.extend([card] * count)
 
-# card_names = [c["name"] for c in cards]
-
-# # on choisi le nombre de cartes:
-# deck_dict = {}
-
-# st.subheader("Build your deck")
-
-# for card in card_names:
-#     count = st.number_input(
-#         f"{card}",
-#         min_value=0,
-#         max_value=10,
-#         step=1,
-#         key=card
-#     )
-#     if count > 0:
-#         deck_dict[card] = count
-
-# deck = []
-# for card, count in deck_dict.items():
-#     deck.extend([card] * count)
-# deck = st.multiselect("Select cards for your deck", card_names)
-# deck_input = st.text_area("Enter your deck (one card name per line)\n" \
-# "separated by commas\n" \
-# "Strike, Defend, Bash, etc.")
 
 if st.button("Analyze Deck"):
 
