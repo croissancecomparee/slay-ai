@@ -4,7 +4,7 @@ from app.services.card_service.card_api import (
     get_all_cards, 
     get_card_by_name,
 )
-from app.services.deck_service import analyze_deck
+from app.services.deck_service import analyze_deck_service
 
 router = APIRouter()
 
@@ -17,5 +17,5 @@ def get_card(name: str):
     return get_card_by_name(name)
 
 @router.post("/deck/analyze")
-def analyze_deck(deck: list[str]):
-    return analyze_deck(deck)
+def analyze_deck_route(deck: list[str]):
+    return analyze_deck_service(deck)

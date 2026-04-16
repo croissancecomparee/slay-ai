@@ -1,7 +1,7 @@
 from app.services.card_service.card_api import get_card_by_name
 
 
-def analyze_deck(deck: list[str]):
+def analyze_deck_service(deck: list[str]):
     '''
     Fonction qui prend en entrée une liste de noms de cartes (le deck du joueur) 
     et qui retourne un dictionnaire contenant des statistiques sur ce deck, 
@@ -13,6 +13,8 @@ def analyze_deck(deck: list[str]):
     - le bloc total,
     - le nombre de cartes à piocher,
     - et les tags présents dans le deck.
+
+    Attention à la virgule à la fin pour les fichiers json
     '''
     stats = {
         "size": len(deck),
