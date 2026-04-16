@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import pandas as pd
 
 st.title("Slay The Spire Deck Analyzer")
 
@@ -17,17 +18,30 @@ if st.button("Analyze Deck"):
 
     if response.status_code == 200:
         stats = response.json()
-        st.write("Deck Statistics:")
-        st.write(f"Size: {stats['size']}")
-        st.write(f"Attack Cards: {stats['attack_count']}")
-        st.write(f"Skill Cards: {stats['skill_count']}")
-        st.write(f"Power Cards: {stats['power_count']}")
-        st.write(f"Average Cost: {stats['avg_cost']}")
-        st.write(f"Total Damage: {stats['total_damage']}")
-        st.write(f"Total Block: {stats['total_block']}")
-        st.write(f"Cards to Draw: {stats['draw_count']}")
+        st.subheader("📊 Deck Stats")
+
+        col1, col2 = st.columns(2)
+
+        col1.metric("Size", stats["size"])
+        col1.metric("Attack", stats["attack_count"])
+        col1.metric("Skill", stats["skill_count"])
+        col1.metric("Power", stats["power_count"])
+
+        col2.metric("Avg cost", stats["avg_cost"])
+        col2.metric("Damage", stats["total_damage"])
+        col2.metric("Block", stats["total_block"])
+        col2.metric("Draw", stats["draw_count"])
+
+        st.subheader("🧪 Tags")
+
+        st.write(stats["tags"])
         st.write("Tags:")
         for tag, count in stats["tags"].items():
             st.write(f"{tag}: {count}")
+
+        df = pd.DataFrame({"Type": ["Attack", "Skill", "Power"], "Count": [stats["attack_count"], stats["skill_count"], stats["power_count"],]})
+
+        st.bar_chart(df.set_index("Type"))
+        
     else:
         st.error("Error analyzing deck. Please try again.")
