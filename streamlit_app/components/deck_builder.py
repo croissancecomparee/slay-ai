@@ -1,6 +1,7 @@
 import streamlit as st
 from api import get_cards_scores
 from utils.score_utils import get_score_color
+from utils.rarity_color import get_rarity_color
 
 def render_deck_builder(cards):
     st.subheader("🃏 Available Cards")
@@ -22,16 +23,39 @@ def render_deck_builder(cards):
             reverse=True
         )
 
+    rarity_filter = st.selectbox(
+        "Filter by rarity",
+        ["all", "starter", "common", "uncommon", "rare"]
+    )
+
+    filtered_cards = [
+        c for c in cards
+        if rarity_filter == "all" or c["rarity"] == rarity_filter
+    ]
+
     for card in filtered_cards:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
         score = scores.get(card["name"], "N/A")
         color = get_score_color(score)
+        rarity_color = get_rarity_color(card["rarity"])
 
         # Affichage du nom de la carte, de son coût, de son type et de son score avec une couleur correspondante
         col1.markdown(
             f"""
-            {card['name']} (cost: {card['cost']}) [{card['type_card']}]
+            <div style="border-left: 4px solid {rarity_color}; padding-left: 8px; display:flex; align-items:center; gap:8px;">
+                <span style="font-weight:bold;">{card['name']} (cost: {card['cost']}) [{card['type_card']}]</span>
+                <span style="
+                    background-color:{rarity_color};
+                    color:black;
+                    padding:2px 6px;
+                    border-radius:6px;
+                    font-size:10px;
+                ">
+                    {card['rarity']}
+                </span>
+            </div>
+            
             <span style='color:{color}; font-weight:bold'>Score: {score}</span>
             """,
             unsafe_allow_html=True
