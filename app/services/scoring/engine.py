@@ -1,27 +1,14 @@
 # compute card score
 
-from .weights import W_DAMAGE, W_BLOCK, W_DRAW, W_COST
+from .weights import (
+    W_DAMAGE,
+    W_BLOCK,
+    W_DRAW,
+    W_COST,
+)
 
+from .effects import compute_effect_bonus
 
-def compute_effect_bonus(card):
-    '''
-    Calcule les bonus/malus de la carte en fonction de ses effets spéciaux (poison, exhaust...).
-    '''
-    bonus = 0
-
-    if "exhaust" in card["tags"]:
-        bonus += 0.2  # léger bonus pour les cartes qui s'épuisent
-
-    if "self_damage" in card["tags"]:
-        bonus -= 1.5  # malus pour les cartes qui infligent des dégâts à soi-même
-
-    if "energy_gain" in card["tags"]:
-        bonus += 2.0  # bonus pour les cartes qui génèrent de l'énergie
-
-    if "cost_reduction" in card["tags"]:
-        bonus += 1.0  # bonus pour les cartes qui réduisent le coût d'autres cartes
-
-    return bonus
 
 def compute_absolute_card_score(card):
     '''

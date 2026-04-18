@@ -4,6 +4,7 @@ from app.services.card_service.card_api import (
     get_all_cards, 
     get_card_by_name,
 )
+from app.services.scoring.engine import compute_absolute_card_score
 from app.services.deck_service import analyze_deck_service
 
 router = APIRouter()
@@ -20,4 +21,6 @@ def get_card(name: str):
 def analyze_deck_route(deck: list[str]):
     return analyze_deck_service(deck)
 
-@router.get()
+@router.post("/cards/score")
+def compute_card_score(card: dict):
+    return compute_absolute_card_score(card)
