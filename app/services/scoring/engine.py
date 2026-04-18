@@ -9,6 +9,8 @@ from .weights import (
 
 from .effects import compute_effect_bonus
 
+from .types import TYPE_BONUS
+
 
 def compute_absolute_card_score(card):
     '''
@@ -27,6 +29,8 @@ def compute_absolute_card_score(card):
     )
 
     raw_score += compute_effect_bonus(card)
+
+    raw_score += TYPE_BONUS.get(card['type'], 0)
 
     score = raw_score / (1 + cost * W_COST)
 
