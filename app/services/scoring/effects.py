@@ -9,6 +9,7 @@ from .weights import (
     W_VULNERABILITY,
     W_WEAKNESS,
     W_STRENGTH,
+    W_DMG_ALL,
 )
 
 def compute_effect_bonus(card):
@@ -41,5 +42,8 @@ def compute_effect_bonus(card):
 
     if "frailty" in card["tags"]:
         bonus += W_FRAILTY  # bonus pour les cartes qui appliquent la fragilité
+
+    if "damage_all" in card["tags"]:
+        bonus += W_DMG_ALL  # bonus pour les cartes qui infligent des dégâts à tous les ennemis
 
     return bonus

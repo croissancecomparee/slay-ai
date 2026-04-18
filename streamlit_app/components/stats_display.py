@@ -36,7 +36,6 @@ def render_stats(stats):
 
     # Score display
 
-    st.subheader("⭐ Deck Score")
 
     color = get_score_color(stats["avg_score"])
 
