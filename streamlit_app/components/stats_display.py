@@ -1,3 +1,5 @@
+# import scipy as sp
+
 import streamlit as st
 import pandas as pd
 
@@ -31,3 +33,13 @@ def render_stats(stats):
 
     for tag, count in stats["tags"].items():
         st.write(f"{tag}: {count}")
+
+    st.subheader("⭐ Deck Score")
+
+    st.metric("Average score", stats["avg_score"])
+
+    st.write(f"🏆 Best card: {stats['best_card']['name']} ({stats['best_card']['score']})")
+    st.write(f"💀 Worst card: {stats['worst_card']['name']} ({stats['worst_card']['score']})")
+
+    df_scores = pd.DataFrame(stats["card_scores"])
+    st.bar_chart(df_scores.set_index("name"))
