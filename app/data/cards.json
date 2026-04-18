@@ -38,7 +38,7 @@
     "block": 0,
     "draw": 0,
     "type_card": "attack",
-    "tags": ["basic"],
+    "tags": ["basic", "vulnerability"],
     "description": "Deal 8 damage. Apply 2 Vulnerable.",
     "rarity": "common",
     "character": "ironclad",
@@ -114,7 +114,7 @@
     {
         "name": "Twin Strike",
         "cost": 1,
-        "damage": 5,
+        "damage": 10,
         "block": 0,
         "draw": 0,
         "type_card": "attack",
@@ -123,7 +123,7 @@
         "rarity": "common",
         "character": "ironclad",
         "upgraded": {
-        "damage": 7,
+        "damage": 14,
         "description": "Deal 7 damage twice."
         }
     },
@@ -134,7 +134,7 @@
         "block": 0,
         "draw": 0,
         "type_card": "attack",
-        "tags": ["basic"],
+        "tags": ["basic", "vulnerability", "weakness"],
         "description": "Deal 13 damage. Apply 1 Weak and 1 Vulnerable.",
         "rarity": "common",
         "character": "ironclad",
