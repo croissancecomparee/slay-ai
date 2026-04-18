@@ -30,7 +30,7 @@ def compute_absolute_card_score(card):
 
     raw_score += compute_effect_bonus(card)
 
-    raw_score += TYPE_BONUS.get(card['type'], 0)
+    raw_score += TYPE_BONUS.get(card['type_card'], 0)
 
     score = raw_score / (1 + cost * W_COST)
 
@@ -43,8 +43,8 @@ def compute_synergy_bonus(card, deck_stats):
     synergy_bonus = 0
 
     # Bonus pour les cartes qui bénéficient des types de cartes majoritaires dans le deck
-    if card['type'] in deck_stats['type_distribution']:
-        synergy_bonus += deck_stats['type_distribution'][card['type']] * 0.1
+    if card['type_card'] in deck_stats['type_distribution']:
+        synergy_bonus += deck_stats['type_distribution'][card['type_card']] * 0.1
 
     # Bonus pour les cartes qui bénéficient des énergies majoritaires dans le deck
     for energy in card.get('energy_cost', []):

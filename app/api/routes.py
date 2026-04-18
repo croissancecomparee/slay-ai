@@ -30,4 +30,5 @@ def analyze_deck_route(deck: list[str]):
 @router.get("/cards/{name}/score")
 def get_card_score(name: str):
     card = get_card_by_name(name)
-    return compute_absolute_card_score(card)
+    score = compute_absolute_card_score(card)
+    return {"score": score}
