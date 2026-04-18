@@ -1,7 +1,9 @@
+import textwrap
 import streamlit as st
 from api import get_cards_scores
 from utils.score_utils import get_score_color
 from utils.rarity_color import get_rarity_color
+from utils.type_icon import get_type_icon
 
 def render_deck_builder(cards):
     st.subheader("🃏 Available Cards")
@@ -39,27 +41,33 @@ def render_deck_builder(cards):
         score = scores.get(card["name"], "N/A")
         color = get_score_color(score)
         rarity_color = get_rarity_color(card["rarity"])
+        icon = get_type_icon(card["type_card"])
 
         # Affichage du nom de la carte, de son coût, de son type et de son score avec une couleur correspondante
-        col1.markdown(
-            f"""
-            <div style="border-left: 4px solid {rarity_color}; padding-left: 8px; display:flex; align-items:center; gap:8px;">
-                <span style="font-weight:bold;">{card['name']} (cost: {card['cost']}) [{card['type_card']}]</span>
-                <span style="
-                    background-color:{rarity_color};
-                    color:black;
-                    padding:2px 6px;
-                    border-radius:6px;
-                    font-size:10px;
-                ">
-                    {card['rarity']}
+        html = textwrap.dedent(f"""
+        <div style="border-left: 4px solid {rarity_color};
+            padding-left: 8px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        ">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:18px;">{icon}</span>
+                <span style="font-weight:bold;">
+                    {card['name']} (cost: {card['cost']})
                 </span>
             </div>
-            
-            <span style='color:{color}; font-weight:bold'>Score: {score}</span>
-            """,
-            unsafe_allow_html=True
-        )
+
+        </div>
+
+        <div style="margin-left:8px;">
+            <span style="color:{color}; font-weight:bold">
+                Score: {score}
+            </span>
+        </div>
+        """)
+
+        col1.markdown(html, unsafe_allow_html=True)
 
         if col2.button("+", key=f"add_{card['name']}"):
             st.session_state.deck[card["name"]] = \
