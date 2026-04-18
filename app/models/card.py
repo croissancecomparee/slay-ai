@@ -12,7 +12,8 @@ class Card:
         block:int=0,
         draw:int=0,
         type_card:str=None, #attack, skill, power
-        tags:list[str]=None,
+        tags:list[str]=None, # peut-être doublon. permet d'ajouter des tags pour les synergies et archétype (ex: strength_scaling, poison, etc.)
+        effects: dict=None, #pour les effets spéciaux comme strength_scaling, poison, etc.  
         character:str=None, #ironclad, silent, defect...
         rarity:str=None, #starter,common, uncommon, rare
         description:str=None,
@@ -28,6 +29,7 @@ class Card:
         self.draw = draw
         self.type_card = type_card
         self.tags = tags
+        self.effects = effects
         self.character = character
         self.rarity = rarity
         self.description = description
