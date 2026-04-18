@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+from utils.score_utils import get_score_color
+
 def render_stats(stats):
     st.subheader("📊 Deck Stats")
 
@@ -31,3 +33,51 @@ def render_stats(stats):
 
     for tag, count in stats["tags"].items():
         st.write(f"{tag}: {count}")
+
+    # Score display
+
+    st.subheader("⭐ Deck Score")
+
+    color = get_score_color(stats["avg_score"])
+
+    st.markdown(
+        f"""
+        <h3>⭐ Deck Score</h3>
+        <p style="font-size:20px;">
+            Average score:
+            <span style="color:{color}; font-weight:bold;">
+                {stats["avg_score"]}
+            </span>
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    best = stats["best_card"]
+    worst = stats["worst_card"]
+
+    best_color = get_score_color(best["score"])
+    worst_color = get_score_color(worst["score"])
+
+    st.markdown(
+        f"""
+        <p>
+            🏆 Best card:
+            <span style="color:{best_color}; font-weight:bold;">
+                {best["name"]} ({best["score"]})
+            </span>
+        </p>
+
+        <p>
+            💀 Worst card:
+            <span style="color:{worst_color}; font-weight:bold;">
+                {worst["name"]} ({worst["score"]})
+            </span>
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    df_scores = pd.DataFrame(stats["card_scores"])
+    df_scores = df_scores.sort_values(by="score", ascending=False)
+    st.bar_chart(df_scores.set_index("name"))

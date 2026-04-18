@@ -1,5 +1,5 @@
 from app.services.card_service.card_api import get_card_by_name
-
+from app.services.scoring.engine import compute_absolute_card_score
 
 def analyze_deck_service(deck: list[str]):
     '''
@@ -25,7 +25,9 @@ def analyze_deck_service(deck: list[str]):
         "total_damage": 0,
         "total_block": 0,
         "draw_count": 0,
-        "tags": {}
+        "tags": {},
+        "card_scores": [],
+        "avg_score": 0,
     }
 
     total_cost = 0
@@ -55,8 +57,31 @@ def analyze_deck_service(deck: list[str]):
         for tag in card.get("tags", []):
             stats["tags"][tag] = stats["tags"].get(tag, 0) + 1
 
+        # score
+        score = compute_absolute_card_score(card)
+        # stats["tags"]["score"] = stats["tags"].get("score", 0) + score
+        # stats["score"] = stats["tags"]["score"] / stats["size"] if stats["size"] > 0 else 0 
+        stats["card_scores"].append({
+            "name": card["name"],
+            "score": score
+        })
+
     # moyenne coût
     if stats["size"] > 0:
         stats["avg_cost"] = round(total_cost / stats["size"], 2)
+
+    # score moyen
+    if stats["card_scores"]:
+        avg_score = round(
+            sum(c["score"] for c in stats["card_scores"]) / len(stats["card_scores"]),
+            2
+        )
+        stats["avg_score"] = avg_score
+
+    best_card = max(stats["card_scores"], key=lambda c: c["score"], default=None)
+    stats["best_card"] = best_card
+
+    worst_card = min(stats["card_scores"], key=lambda c: c["score"], default=None)
+    stats["worst_card"] = worst_card
 
     return stats

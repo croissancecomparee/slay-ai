@@ -14,6 +14,14 @@ def render_deck_builder(cards):
     card_names = [c["name"] for c in filtered_cards]
     scores = get_cards_scores(card_names)
 
+    sort_by_score = st.checkbox("Sort by score")
+
+    if sort_by_score:
+        filtered_cards.sort(
+            key=lambda c: scores.get(c["name"], 0),
+            reverse=True
+        )
+
     for card in filtered_cards:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
