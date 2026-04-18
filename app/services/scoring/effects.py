@@ -7,10 +7,26 @@ from .weights import (
     W_ENERGY_GAIN,
     W_COST_REDUCTION,
     W_VULNERABILITY,
-    W_WEAKNESS,
+    W_WEAK,
     W_STRENGTH,
     W_DMG_ALL,
+    W_STRENGTH_SCALING,
+    W_BLOCK_IF_ENEMY_ATTACKS,
 )
+
+EFFECT_WEIGHTS = {
+    "exhaust": W_EXHAUST,
+    "self_damage": W_SELF_DAMAGE,
+    "energy_gain": W_ENERGY_GAIN,
+    "cost_reduction": W_COST_REDUCTION,
+    "vulnerability": W_VULNERABILITY,
+    "weak": W_WEAK,
+    "strength": W_STRENGTH,
+    "frailty": W_FRAILTY,
+    "damage_all": W_DMG_ALL,
+    "strength_scaling": W_STRENGTH_SCALING,
+    "block_if_enemy_attacks": W_BLOCK_IF_ENEMY_ATTACKS,
+}
 
 def compute_effect_bonus(card):
     '''
@@ -19,31 +35,11 @@ def compute_effect_bonus(card):
     '''
     bonus = 0
 
-    if "exhaust" in card["tags"]:
-        bonus += W_EXHAUST  # léger bonus pour les cartes qui s'épuisent
+    effects = card.get("effects", {})
 
-    if "self_damage" in card["tags"]:
-        bonus += W_SELF_DAMAGE  # malus pour les cartes qui infligent des dégâts à soi-même
-
-    if "energy_gain" in card["tags"]:
-        bonus += W_ENERGY_GAIN  # bonus pour les cartes qui génèrent de l'énergie
-
-    if "cost_reduction" in card["tags"]:
-        bonus += W_COST_REDUCTION  # bonus pour les cartes qui réduisent le coût d'autres cartes
-
-    if "vulnerability" in card["tags"]:
-        bonus += W_VULNERABILITY  # bonus pour les cartes qui appliquent la vulnérabilité
-
-    if "weakness" in card["tags"]:
-        bonus += W_WEAKNESS  # bonus pour les cartes qui appliquent la faiblesse
-
-    if "strength" in card["tags"]:
-        bonus += W_STRENGTH  # bonus pour les cartes qui appliquent la force
-
-    if "frailty" in card["tags"]:
-        bonus += W_FRAILTY  # bonus pour les cartes qui appliquent la fragilité
-
-    if "damage_all" in card["tags"]:
-        bonus += W_DMG_ALL  # bonus pour les cartes qui infligent des dégâts à tous les ennemis
+    for effect_name, weight in EFFECT_WEIGHTS.items():
+        if effect_name in effects:
+            count = effects.get(effect_name, 0)
+            bonus += weight * count
 
     return bonus
