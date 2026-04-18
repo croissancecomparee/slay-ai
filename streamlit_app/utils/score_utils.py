@@ -1,5 +1,7 @@
 def get_score_color(score):
-    if score >= 5:
+    if score >= 10:
+        return "darkgreen"
+    elif score >= 5:
         return "green"
     elif score >= 4:
         return "yellow"
