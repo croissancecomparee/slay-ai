@@ -20,6 +20,7 @@ def get_card_score(name):
     '''
     response = requests.get(f"{BASE_URL}/cards/{name}/score")
     if response.status_code != 200:
+        print("Error:", response.status_code, response.text)
         return None
     return response.json()
 
@@ -32,7 +33,8 @@ def get_cards_scores(cards):
         ...
     }
     '''
-    response = requests.get(f"{BASE_URL}/cards/scores", json=cards)
+    response = requests.post(f"{BASE_URL}/cards/scores", json=cards)
     if response.status_code != 200:
+        print("Error:", response.status_code, response.text)
         return None
     return response.json()

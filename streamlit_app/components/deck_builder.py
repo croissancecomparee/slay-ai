@@ -1,5 +1,6 @@
 import streamlit as st
-from api import get_card_score
+from api import get_cards_scores
+from utils.score_utils import get_score_color
 
 def render_deck_builder(cards):
     st.subheader("🃏 Available Cards")
@@ -10,12 +11,23 @@ def render_deck_builder(cards):
         c for c in cards
         if search.lower() in c["name"].lower()
     ]
+    card_names = [c["name"] for c in filtered_cards]
+    scores = get_cards_scores(card_names)
 
     for card in filtered_cards:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
-        col1.write(f"{card['name']} (cost: {card['cost']}) [{card['type_card']}]")
-        # col1.write(f"Score: {get_card_score(card['name'])}")
+        score = scores.get(card["name"], "N/A")
+        color = get_score_color(score)
+
+        # Affichage du nom de la carte, de son coût, de son type et de son score avec une couleur correspondante
+        col1.markdown(
+            f"""
+            {card['name']} (cost: {card['cost']}) [{card['type_card']}]
+            <span style='color:{color}; font-weight:bold'>Score: {score}</span>
+            """,
+            unsafe_allow_html=True
+        )
 
         if col2.button("+", key=f"add_{card['name']}"):
             st.session_state.deck[card["name"]] = \
