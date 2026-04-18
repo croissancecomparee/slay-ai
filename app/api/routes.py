@@ -19,3 +19,5 @@ def get_card(name: str):
 @router.post("/deck/analyze")
 def analyze_deck_route(deck: list[str]):
     return analyze_deck_service(deck)
+
+@router.get()
