@@ -18,4 +18,7 @@ def get_card_score(name):
         "score": 42.0
     }
     '''
-    return requests.get(f"{BASE_URL}/cards/{name}/score").json()
+    response = requests.get(f"{BASE_URL}/cards/{name}/score")
+    if response.status_code != 200:
+        return None
+    return response.json()
