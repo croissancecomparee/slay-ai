@@ -105,6 +105,16 @@ Response:
   "size": 3
 }
 ```
+### Start Streamlit app
+
+```bash
+streamlit run streamlit_app/app.py
+```
+
+### Access
+
+* Local URL: http://localhost:8501
+* Network URL: http://172.27.75.137:8501
 
 ---
 
