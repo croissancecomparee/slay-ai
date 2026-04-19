@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from domain.models.card import Card
 from typing import Optional
@@ -14,12 +14,28 @@ class CardDTO(BaseModel):
     block: int
     draw: int
     type_card: str
-    tags: list[str]
-    character: str
-    rarity: str
-    description: str
-    effects: Optional[dict] = None
-    upgraded: Optional[dict] = None
+    tags: list[str] = Field(default_factory=list)
+    character: str | None = None
+    rarity: str | None = None
+    description: str | None = None
+    effects: dict | None = None
+    upgraded: dict | None = None
+
+    # def to_domain(self):
+    #     return Card(**self.model_dump())
 
     def to_domain(self):
-        return Card(**self.model_dump())
+        return Card(
+            name=self.name,
+            cost=self.cost,
+            damage=self.damage,
+            block=self.block,
+            draw=self.draw,
+            type_card=self.type_card,
+            tags=self.tags or [],
+            effects=self.effects or {},
+            character=self.character,
+            rarity=self.rarity,
+            description=self.description,
+            upgraded=self.upgraded or {},
+        )

@@ -16,6 +16,7 @@ def compute_absolute_card_score(card):
     '''
     Calcul le score absolu d'une carte en fonction de ses effets, stats et de son coût.
     '''
+    print("compute_absolute_card_score - card", card)
 
     damage = card.get('damage', 0)
     block = card.get('block', 0)
