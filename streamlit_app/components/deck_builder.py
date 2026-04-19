@@ -1,11 +1,10 @@
 import textwrap
-from app.models import card
 import streamlit as st
+from domain.models.card import Card
 from api import get_cards_scores
 from utils.score_utils import get_score_color
 from utils.rarity_color import get_rarity_color
 from utils.type_icon import get_type_icon
-from utils.upgraded_utils import get_card_stat
 
 def render_deck_builder(cards):
     st.subheader("🃏 Available Cards")
@@ -17,24 +16,13 @@ def render_deck_builder(cards):
     if use_upgraded:
         st.info("Showing upgraded cards (+)")
 
+    cards = [Card(**c) for c in cards]
+    print("cards", cards)
+
     filtered_cards = [
         c for c in cards
-        if search.lower() in c["name"].lower()
+        if search.lower() in c.name.lower()
     ]
-    card_names = [c["name"] for c in filtered_cards]
-    cards_names = [
-        card.resolve(use_upgraded)
-        for card in card_names
-    ]
-    scores = get_cards_scores(cards_names)
-
-    sort_by_score = st.checkbox("Sort by score")
-
-    if sort_by_score:
-        filtered_cards.sort(
-            key=lambda c: scores.get(c["name"], 0),
-            reverse=True
-        )
 
     rarity_filter = st.selectbox(
         "Filter by rarity",
@@ -42,22 +30,44 @@ def render_deck_builder(cards):
     )
 
     filtered_cards = [
-        c for c in card_names
-        if rarity_filter == "all" or c["rarity"] == rarity_filter
+        c for c in filtered_cards
+        if rarity_filter == "all" or c.rarity == rarity_filter
     ]
+
+    filtered_cards = [
+        card.resolve(upgraded=use_upgraded)
+        for card in filtered_cards
+    ]
+    # print(filtered_cards)
+    print("[card.to_dict() for card in filtered_cards]", [card.to_dict() for card in filtered_cards])
+    scores = get_cards_scores([card.to_dict() for card in filtered_cards])
+    print("scores", scores)
+    
+    if not scores:
+        st.error("Score API failed")
+        return
+
+    sort_by_score = st.checkbox("Sort by score")
+
+    if sort_by_score:
+        filtered_cards.sort(
+            key=lambda c: scores.get(c.name, 0),
+            reverse=True
+        )
 
     for card in filtered_cards:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
-        resolved_card = card.resolve(upgraded=True)
-        score = scores.get(resolved_card, "N/A")
-        color = get_score_color(score)
-        rarity_color = get_rarity_color(card["rarity"])
-        icon = get_type_icon(card["type_card"])
+        name_display = card.name #+ ("+" if use_upgraded else "")
 
-        # get cost en prenant en compte la version améliorée de la carte si l'option est activée
-        cost = get_card_stat(card, "cost", use_upgraded)
-        name_display = card["name"] + ("+" if use_upgraded else "")
+        print("card.name", card.name)
+        print("name_display", name_display)
+
+        # on récupère les attributs de la carte pour les afficher
+        score = scores.get(card.name, "N/A")
+        color = get_score_color(score)
+        rarity_color = get_rarity_color(card.rarity)
+        icon = get_type_icon(card.type_card)
 
         # Affichage du nom de la carte, de son coût, de son type et de son score avec une couleur correspondante
         html = textwrap.dedent(f"""
@@ -70,7 +80,7 @@ def render_deck_builder(cards):
             <div style="display:flex; align-items:center; gap:8px;">
                 <span style="font-size:18px;">{icon}</span>
                 <span style="font-weight:bold;">
-                    {name_display} (cost: {cost})
+                    {name_display} (cost: {card.cost})
                 </span>
             </div>
 
@@ -95,5 +105,5 @@ def render_deck_builder(cards):
                 if st.session_state.deck[name_display] <= 0:
                     del st.session_state.deck[name_display]
 
-        if col4.button("ℹ️", key=f"info_{card['name']}"):
-            st.session_state.selected_card = card["name"]
+        if col4.button("ℹ️", key=f"info_{card.name}"):
+            st.session_state.selected_card = card.name

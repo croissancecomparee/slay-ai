@@ -12,7 +12,9 @@ st.title("Slay The Spire Deck Analyzer")
 
 init_state()
 
+print("st.session_state", st.session_state)
 cards = get_all_cards()
+print("cards", cards)
 
 col_left, col_right = st.columns([2, 1])
 

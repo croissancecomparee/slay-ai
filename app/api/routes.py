@@ -7,7 +7,9 @@ from app.services.card_service.card_api import (
 from app.services.scoring.engine import compute_absolute_card_score
 from app.services.deck_service import analyze_deck_service
 
-from app.models.card import Card
+from app.models.card_dto import CardDTO
+from domain.models.card import Card
+
 
 router = APIRouter()
 
@@ -24,11 +26,10 @@ def analyze_deck_route(deck: list[str]):
     return analyze_deck_service(deck)
 
 @router.post("/cards/scores")
-def get_cards_scores(cards: list[str]):
+def get_cards_scores(cards: list[CardDTO]):
     results = {}
-    for card_name in cards:
-        card = get_card_by_name(card_name)
-        results[card_name] = compute_absolute_card_score(card)
+    for card in cards:
+        results[card.name] = compute_absolute_card_score(card.to_domain())
     return results
 
 @router.get("/cards/{name}/score")
