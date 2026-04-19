@@ -35,4 +35,13 @@ class Card:
         self.description = description
         self.upgraded = upgraded
 
-   
+    def resolve(self, upgraded: bool = False):
+        data = self.__dict__.copy()
+
+        if upgraded and self.upgraded:
+            data.update(self.upgraded)
+
+        data["is_upgraded"] = upgraded
+        data["name"] = self.name + ("+" if upgraded else "")
+
+        return Card(**data)

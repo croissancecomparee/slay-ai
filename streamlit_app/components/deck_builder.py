@@ -14,12 +14,19 @@ def render_deck_builder(cards):
 
     use_upgraded = st.toggle("Use upgraded cards", value=False)
 
+    if use_upgraded:
+        st.info("Showing upgraded cards (+)")
+
     filtered_cards = [
         c for c in cards
         if search.lower() in c["name"].lower()
     ]
     card_names = [c["name"] for c in filtered_cards]
-    scores = get_cards_scores(card_names)
+    cards_names = [
+        card.resolve(use_upgraded)
+        for card in card_names
+    ]
+    scores = get_cards_scores(cards_names)
 
     sort_by_score = st.checkbox("Sort by score")
 
@@ -35,14 +42,15 @@ def render_deck_builder(cards):
     )
 
     filtered_cards = [
-        c for c in cards
+        c for c in card_names
         if rarity_filter == "all" or c["rarity"] == rarity_filter
     ]
 
     for card in filtered_cards:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
-        score = scores.get(card["name"], "N/A")
+        resolved_card = card.resolve(upgraded=True)
+        score = scores.get(resolved_card, "N/A")
         color = get_score_color(score)
         rarity_color = get_rarity_color(card["rarity"])
         icon = get_type_icon(card["type_card"])
@@ -78,14 +86,14 @@ def render_deck_builder(cards):
         col1.markdown(html, unsafe_allow_html=True)
 
         if col2.button("+", key=f"add_{name_display}"):
-            st.session_state.deck[card["name"]] = \
-                st.session_state.deck.get(card["name"], 0) + 1
+            st.session_state.deck[name_display] = \
+                st.session_state.deck.get(name_display, 0) + 1
 
         if col3.button("-", key=f"remove_{name_display}"):
-            if card["name"] in st.session_state.deck:
-                st.session_state.deck[card["name"]] -= 1
-                if st.session_state.deck[card["name"]] <= 0:
-                    del st.session_state.deck[card["name"]]
+            if name_display in st.session_state.deck:
+                st.session_state.deck[name_display] -= 1
+                if st.session_state.deck[name_display] <= 0:
+                    del st.session_state.deck[name_display]
 
         if col4.button("ℹ️", key=f"info_{card['name']}"):
             st.session_state.selected_card = card["name"]
