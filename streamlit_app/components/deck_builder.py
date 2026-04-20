@@ -1,5 +1,6 @@
 import textwrap
 import streamlit as st
+from domain.models.card import Card
 from api import get_cards_scores
 from utils.score_utils import get_score_color
 from utils.rarity_color import get_rarity_color
@@ -10,20 +11,17 @@ def render_deck_builder(cards):
 
     search = st.text_input("Search card")
 
+    use_upgraded = st.toggle("Use upgraded cards", value=False)
+
+    if use_upgraded:
+        st.info("Showing upgraded cards (+)")
+
+    cards = [Card(**c) for c in cards]
+
     filtered_cards = [
         c for c in cards
-        if search.lower() in c["name"].lower()
+        if search.lower() in c.name.lower()
     ]
-    card_names = [c["name"] for c in filtered_cards]
-    scores = get_cards_scores(card_names)
-
-    sort_by_score = st.checkbox("Sort by score")
-
-    if sort_by_score:
-        filtered_cards.sort(
-            key=lambda c: scores.get(c["name"], 0),
-            reverse=True
-        )
 
     rarity_filter = st.selectbox(
         "Filter by rarity",
@@ -31,17 +29,41 @@ def render_deck_builder(cards):
     )
 
     filtered_cards = [
-        c for c in cards
-        if rarity_filter == "all" or c["rarity"] == rarity_filter
+        c for c in filtered_cards
+        if rarity_filter == "all" or c.rarity == rarity_filter
     ]
+
+    filtered_cards = [
+        card.resolve(upgraded=use_upgraded)
+        for card in filtered_cards
+    ]
+    # print(filtered_cards)
+    scores = get_cards_scores([card.to_dict() for card in filtered_cards])
+    # print("scores", scores)
+    
+    if not scores:
+        st.error("Score API failed")
+        return
+
+    sort_by_score = st.checkbox("Sort by score")
+
+    if sort_by_score:
+        filtered_cards.sort(
+            key=lambda c: scores.get(c.name, 0),
+            reverse=True
+        )
 
     for card in filtered_cards:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
-        score = scores.get(card["name"], "N/A")
+        name_display = card.name 
+
+
+        # on récupère les attributs de la carte pour les afficher
+        score = scores.get(card.name, "N/A")
         color = get_score_color(score)
-        rarity_color = get_rarity_color(card["rarity"])
-        icon = get_type_icon(card["type_card"])
+        rarity_color = get_rarity_color(card.rarity)
+        icon = get_type_icon(card.type_card)
 
         # Affichage du nom de la carte, de son coût, de son type et de son score avec une couleur correspondante
         html = textwrap.dedent(f"""
@@ -54,7 +76,7 @@ def render_deck_builder(cards):
             <div style="display:flex; align-items:center; gap:8px;">
                 <span style="font-size:18px;">{icon}</span>
                 <span style="font-weight:bold;">
-                    {card['name']} (cost: {card['cost']})
+                    {name_display} (cost: {card.cost})
                 </span>
             </div>
 
@@ -69,15 +91,21 @@ def render_deck_builder(cards):
 
         col1.markdown(html, unsafe_allow_html=True)
 
-        if col2.button("+", key=f"add_{card['name']}"):
-            st.session_state.deck[card["name"]] = \
-                st.session_state.deck.get(card["name"], 0) + 1
+        if col2.button("+", key=f"add_{name_display}"):
+            if name_display not in st.session_state.deck:
+                st.session_state.deck[name_display] = {
+                    "card": card.to_dict(),
+                    "count": 1
+                }
+            else:
+                st.session_state.deck[name_display]["count"] += 1
+            
 
-        if col3.button("-", key=f"remove_{card['name']}"):
-            if card["name"] in st.session_state.deck:
-                st.session_state.deck[card["name"]] -= 1
-                if st.session_state.deck[card["name"]] <= 0:
-                    del st.session_state.deck[card["name"]]
+        if col3.button("-", key=f"remove_{name_display}"):
+            if name_display in st.session_state.deck:
+                st.session_state.deck[name_display]["count"] -= 1
+                if st.session_state.deck[name_display]["count"] <= 0:
+                    del st.session_state.deck[name_display]
 
-        if col4.button("ℹ️", key=f"info_{card['name']}"):
-            st.session_state.selected_card = card["name"]
+        if col4.button("ℹ️", key=f"info_{card.name}"):
+            st.session_state.selected_card = card.name

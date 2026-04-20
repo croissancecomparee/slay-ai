@@ -1,7 +1,8 @@
 from app.services.card_service.card_api import get_card_by_name
 from app.services.scoring.engine import compute_absolute_card_score
+from domain.models.card import Card
 
-def analyze_deck_service(deck: list[str]):
+def analyze_deck_service(deck: list[Card]):
     '''
     Fonction qui prend en entrée une liste de noms de cartes (le deck du joueur) 
     et qui retourne un dictionnaire contenant des statistiques sur ce deck, 
@@ -16,6 +17,8 @@ def analyze_deck_service(deck: list[str]):
 
     Attention à la virgule à la fin pour les fichiers json
     '''
+    # print("analyze_deck_service - deck", [card.name for card in deck])
+    # print("len(deck)", len(deck))
     stats = {
         "size": len(deck),
         "attack_count": 0,
@@ -32,29 +35,24 @@ def analyze_deck_service(deck: list[str]):
 
     total_cost = 0
 
-    for card_name in deck:
-        card = get_card_by_name(card_name)
-
-        if not card:
-            continue
-
+    for card in deck:
         # type
-        if card["type_card"] == "attack":
+        if card.type_card == "attack":
             stats["attack_count"] += 1
-        elif card["type_card"] == "skill":
+        elif card.type_card == "skill":
             stats["skill_count"] += 1
-        elif card["type_card"] == "power":
+        elif card.type_card == "power":
             stats["power_count"] += 1
 
         # stats
-        stats["total_damage"] += card.get("damage", 0)
-        stats["total_block"] += card.get("block", 0)
-        stats["draw_count"] += card.get("draw", 0)
+        stats["total_damage"] += card.damage or 0
+        stats["total_block"] += card.block or 0
+        stats["draw_count"] += card.draw or 0
 
-        total_cost += card.get("cost", 0)
+        total_cost += card.cost or 0
 
         # tags (synergies)
-        for tag in card.get("tags", []):
+        for tag in card.tags or []:
             stats["tags"][tag] = stats["tags"].get(tag, 0) + 1
 
         # score
@@ -62,7 +60,7 @@ def analyze_deck_service(deck: list[str]):
         # stats["tags"]["score"] = stats["tags"].get("score", 0) + score
         # stats["score"] = stats["tags"]["score"] / stats["size"] if stats["size"] > 0 else 0 
         stats["card_scores"].append({
-            "name": card["name"],
+            "name": card.name,
             "score": score
         })
 

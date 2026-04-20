@@ -17,10 +17,10 @@ def compute_absolute_card_score(card):
     Calcul le score absolu d'une carte en fonction de ses effets, stats et de son coût.
     '''
 
-    damage = card.get('damage', 0)
-    block = card.get('block', 0)
-    draw = card.get('draw', 0)
-    cost = card.get('cost', 1)
+    damage = card.damage or 0
+    block = card.block or 0
+    draw = card.draw or 0
+    cost = card.cost or 1
 
     raw_score = (
         W_DAMAGE * damage +
@@ -30,7 +30,7 @@ def compute_absolute_card_score(card):
 
     raw_score += compute_effect_bonus(card)
 
-    raw_score += TYPE_BONUS.get(card['type_card'], 0)
+    raw_score += TYPE_BONUS.get(card.type_card, 0)
 
     score = raw_score / (1 + cost * W_COST)
 
