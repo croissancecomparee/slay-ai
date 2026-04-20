@@ -107,7 +107,10 @@ Response:
 ```
 ### Start Streamlit app
 
+
+
 ```bash
+export PYTHONPATH=.
 streamlit run streamlit_app/app.py
 ```
 
