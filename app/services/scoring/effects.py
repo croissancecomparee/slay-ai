@@ -35,11 +35,11 @@ def compute_effect_bonus(card):
     '''
     bonus = 0
 
-    effects = card.get("effects", {})
+    effects = card.effects or {}
 
     for effect_name, weight in EFFECT_WEIGHTS.items():
         if effect_name in effects:
-            count = effects.get(effect_name, 0)
+            count = getattr(effects, effect_name, 0)
             bonus += weight * count
 
     return bonus
