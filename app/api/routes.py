@@ -7,7 +7,7 @@ from app.services.card_service.card_api import (
 from app.services.scoring.engine import compute_absolute_card_score
 from app.services.deck_service import analyze_deck_service
 
-from app.models.card_dto import CardDTO
+from app.dto.card_dto import CardDTO
 from domain.models.card import Card
 
 

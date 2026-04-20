@@ -1,4 +1,5 @@
 import json
+from domain.models.card import Card
 
 def get_all_cards():
     '''
@@ -16,5 +17,5 @@ def get_card_by_name(name: str):
     cards = get_all_cards()
     for card in cards:
         if card["name"].lower() == name.lower():
-            return card
+            return Card(**card)
     return None
