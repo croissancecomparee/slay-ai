@@ -28,12 +28,11 @@ def analyze_deck_route(deck: list[str]):
 @router.post("/cards/scores")
 def get_cards_scores(cards: list[CardDTO]):
     results = {}
-    print("get_cards_scores - cards", cards)
+    # print("get_cards_scores - cards", cards)
     for card in cards:
         card_domain = card.to_domain()
-        print("CARD DOMAIN:", card_domain.__dict__)
         results[card.name] = compute_absolute_card_score(card_domain)
-    print("get_cards_scores - results", results)
+    # print("get_cards_scores - results", results)
     return results
 
 @router.get("/cards/{name}/score")

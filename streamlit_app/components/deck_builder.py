@@ -17,7 +17,6 @@ def render_deck_builder(cards):
         st.info("Showing upgraded cards (+)")
 
     cards = [Card(**c) for c in cards]
-    print("cards", cards)
 
     filtered_cards = [
         c for c in cards
@@ -39,9 +38,8 @@ def render_deck_builder(cards):
         for card in filtered_cards
     ]
     # print(filtered_cards)
-    print("[card.to_dict() for card in filtered_cards]", [card.to_dict() for card in filtered_cards])
     scores = get_cards_scores([card.to_dict() for card in filtered_cards])
-    print("scores", scores)
+    # print("scores", scores)
     
     if not scores:
         st.error("Score API failed")
@@ -60,8 +58,6 @@ def render_deck_builder(cards):
 
         name_display = card.name #+ ("+" if use_upgraded else "")
 
-        print("card.name", card.name)
-        print("name_display", name_display)
 
         # on récupère les attributs de la carte pour les afficher
         score = scores.get(card.name, "N/A")
