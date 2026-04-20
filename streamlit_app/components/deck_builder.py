@@ -56,7 +56,7 @@ def render_deck_builder(cards):
     for card in filtered_cards:
         col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
-        name_display = card.name #+ ("+" if use_upgraded else "")
+        name_display = card.name 
 
 
         # on récupère les attributs de la carte pour les afficher
@@ -92,13 +92,19 @@ def render_deck_builder(cards):
         col1.markdown(html, unsafe_allow_html=True)
 
         if col2.button("+", key=f"add_{name_display}"):
-            st.session_state.deck[name_display] = \
-                st.session_state.deck.get(name_display, 0) + 1
+            if name_display not in st.session_state.deck:
+                st.session_state.deck[name_display] = {
+                    "card": card.to_dict(),
+                    "count": 1
+                }
+            else:
+                st.session_state.deck[name_display]["count"] += 1
+            
 
         if col3.button("-", key=f"remove_{name_display}"):
             if name_display in st.session_state.deck:
-                st.session_state.deck[name_display] -= 1
-                if st.session_state.deck[name_display] <= 0:
+                st.session_state.deck[name_display]["count"] -= 1
+                if st.session_state.deck[name_display]["count"] <= 0:
                     del st.session_state.deck[name_display]
 
         if col4.button("ℹ️", key=f"info_{card.name}"):

@@ -27,7 +27,9 @@ with st.sidebar:
 
 # build deck list
 deck_list = []
-for card, count in st.session_state.deck.items():
+for card_name, item in st.session_state.deck.items():
+    card = item["card"]
+    count = item["count"]
     deck_list.extend([card] * count)
 
 if st.button("Analyze Deck"):

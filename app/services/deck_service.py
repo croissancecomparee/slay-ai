@@ -1,7 +1,8 @@
 from app.services.card_service.card_api import get_card_by_name
 from app.services.scoring.engine import compute_absolute_card_score
+from domain.models.card import Card
 
-def analyze_deck_service(deck: list[str]):
+def analyze_deck_service(deck: list[Card]):
     '''
     Fonction qui prend en entrée une liste de noms de cartes (le deck du joueur) 
     et qui retourne un dictionnaire contenant des statistiques sur ce deck, 
@@ -16,6 +17,8 @@ def analyze_deck_service(deck: list[str]):
 
     Attention à la virgule à la fin pour les fichiers json
     '''
+    # print("analyze_deck_service - deck", [card.name for card in deck])
+    # print("len(deck)", len(deck))
     stats = {
         "size": len(deck),
         "attack_count": 0,
@@ -32,12 +35,7 @@ def analyze_deck_service(deck: list[str]):
 
     total_cost = 0
 
-    for card_name in deck:
-        card = get_card_by_name(card_name)
-
-        if not card:
-            continue
-
+    for card in deck:
         # type
         if card.type_card == "attack":
             stats["attack_count"] += 1

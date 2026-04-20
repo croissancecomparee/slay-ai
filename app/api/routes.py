@@ -22,8 +22,9 @@ def get_card(name: str):
     return get_card_by_name(name)
 
 @router.post("/deck/analyze")
-def analyze_deck_route(deck: list[str]):
-    return analyze_deck_service(deck)
+def analyze_deck_route(deck: list[CardDTO]):
+    cards = [card.to_domain() for card in deck]
+    return analyze_deck_service(cards)
 
 @router.post("/cards/scores")
 def get_cards_scores(cards: list[CardDTO]):
