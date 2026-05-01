@@ -23,8 +23,10 @@ def render_card_details():
         url_name = slugify_card_name(card["name"])
 
         st.markdown(
-                # f"[View on wiki](https://slay-the-spire.fandom.com/wiki/{url_name})"
-                f"[View on wiki](https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:{url_name})"
+                f"[View on wiki SS1](https://slay-the-spire.fandom.com/wiki/{url_name})"
+            )
+        st.markdown(
+                f"[View on wiki SS2](https://slaythespire.wiki.gg/wiki/Slay_the_Spire_2:{url_name})"
             )
 
 
