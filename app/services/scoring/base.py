@@ -3,6 +3,7 @@ from domain.models.card import Card
 from app.services.scoring.engine import compute_absolute_card_score
 from app.services.scoring.synergy import compute_synergy_bonus
 from app.services.scoring.playability import compute_playability
+from app.services.scoring.anti_synergy import compute_anti_synergy_penalty
 
 def compute_card_score(card: Card, deck_stats: dict) -> float:
     '''
@@ -12,6 +13,8 @@ def compute_card_score(card: Card, deck_stats: dict) -> float:
     base_score = compute_absolute_card_score(card)  # Score absolu basé sur les stats et effets
     synergy_bonus = compute_synergy_bonus(card, deck_stats)  # Bonus de synergie
     playability_score = compute_playability(card, deck_stats)  # Score de jouabilité
+    anti_synergy_penalty = compute_anti_synergy_penalty(card, deck_stats)  # Pénalité d'anti-synergie
 
     total_score = base_score * playability_score + synergy_bonus
+    total_score -= anti_synergy_penalty
     return round(total_score, 2)

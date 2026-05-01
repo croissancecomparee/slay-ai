@@ -17,6 +17,6 @@ SYNERGY_WEIGHTS = {
     },
     "vulnerable_scaling": {
         "vulnerability": 2,
-        "vulnerable": 0.5,
+        "vulnerable": 0.6,
     },
 }
