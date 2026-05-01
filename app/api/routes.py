@@ -4,7 +4,7 @@ from app.services.card_service.card_api import (
     get_all_cards, 
     get_card_by_name,
 )
-from app.services.scoring.engine import compute_absolute_card_score
+from app.services.scoring.base import compute_card_score
 from app.services.deck_service import analyze_deck_service
 
 from app.dto.card_dto import CardDTO
@@ -32,12 +32,12 @@ def get_cards_scores(cards: list[CardDTO]):
     # print("get_cards_scores - cards", cards)
     for card in cards:
         card_domain = card.to_domain()
-        results[card.name] = compute_absolute_card_score(card_domain)
+        results[card.name] = compute_card_score(card_domain, {})
     # print("get_cards_scores - results", results)
     return results
 
 @router.get("/cards/{name}/score")
 def get_card_score(name: str):
     card = get_card_by_name(name)
-    score = compute_absolute_card_score(card)
+    score = compute_card_score(card, {})  # Pass empty deck_stats
     return {"score": score}
