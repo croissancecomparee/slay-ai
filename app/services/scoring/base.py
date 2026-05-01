@@ -10,8 +10,8 @@ def compute_card_score(card: Card, deck_stats: dict) -> float:
     '''
     base_score = card.rarity * 10  # Score de base basé sur la rareté
     base_score = compute_absolute_card_score(card)  # Score absolu basé sur les stats et effets
-    # synergy_bonus = compute_synergy_bonus(card, deck_stats)  # Bonus de synergie
+    synergy_bonus = compute_synergy_bonus(card, deck_stats)  # Bonus de synergie
     playability_score = compute_playability(card, deck_stats)  # Score de jouabilité
 
-    total_score = base_score * playability_score  #+ synergy_bonus 
+    total_score = base_score * playability_score + synergy_bonus
     return round(total_score, 2)

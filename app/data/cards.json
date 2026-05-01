@@ -477,7 +477,7 @@
       "block": 0,
       "draw": 0,
       "type_card": "skill",
-      "tags": ["basic", "debuff_skill", "vulnerability"],
+      "tags": ["basic", "debuff_skill", "vulnerability", "exhaust"],
       "effects": {"vulnerability": 3, "exhaust":1},
       "description": "Gain 3 Vulnerable. Exhaust.",
       "rarity": "common",
