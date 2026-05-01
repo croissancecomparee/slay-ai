@@ -33,18 +33,19 @@ It provides:
 * Basic FastAPI setup
 * API endpoints
 * Project structure
+* Interactive UI with Streamlit
 
 ### 🚧 In Progress
 
 * Deck analyzer (stats extraction)
 * Card model & dataset
 * Scoring system (V1)
+* Inermediate scoring (synergies, playability)
 
 ### 🔮 Future
 
-* Advanced scoring (synergies, scaling)
+* Advanced scoring (advanced synergies, scaling)
 * AI explanations (LLM)
-* Interactive UI with Streamlit
 * Deck optimization suggestions
 
 ---
