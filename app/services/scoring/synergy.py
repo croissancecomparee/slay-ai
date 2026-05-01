@@ -27,6 +27,11 @@ def compute_synergy_bonus(card: Card, deck_stats: dict):
                     value = deck_tags[synergy_type]
                     synergy_bonus += weight * value
 
+                # basé sur les effets présents dans le deck
+                elif synergy_type in deck_stats.get('effects', {}):
+                    value = deck_stats['effects'][synergy_type]
+                    synergy_bonus += weight * value
+
     # on s'en occupera après
     # # Bonus pour les cartes qui bénéficient des types de cartes majoritaires dans le deck
     # if card.type_card in deck_stats['type_distribution']:

@@ -13,9 +13,10 @@ SYNERGY_WEIGHTS = {
         "attack_count": 0.2,
     },
     "exhaust": {
-        "exhaust": 1.5,
+        "exhaust": 0.5,
     },
     "vulnerable_scaling": {
         "vulnerability": 2,
+        "vulnerable": 0.5,
     },
 }
