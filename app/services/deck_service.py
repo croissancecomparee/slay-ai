@@ -29,6 +29,7 @@ def analyze_deck_service(deck: list[Card]):
         "total_block": 0,
         "draw_count": 0,
         "tags": {},
+        "effects": {},
         "card_scores": [],
         "avg_score": 0,
     }
@@ -56,6 +57,10 @@ def analyze_deck_service(deck: list[Card]):
         # tags (synergies)
         for tag in card.tags or []:
             stats["tags"][tag] = stats["tags"].get(tag, 0) + 1
+
+        # effects (synergies)
+        for effect, value in (card.effects or {}).items():
+            stats["effects"][effect] = stats["effects"].get(effect, 0) + value
 
 
     # moyenne coût
