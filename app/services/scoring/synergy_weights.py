@@ -3,6 +3,8 @@
 SYNERGY_WEIGHTS = {
     "strength_scaling": {
         "buff_power": 3,   # Inflame / Demon Form
+        "strength": 0.5,   # cartes qui donnent de la force
+        "strength_scaling": 0.1,   # cartes qui gagnent en puissance avec la force
     },
     "block_scaling": {
         "total_block": 0.05,
@@ -12,5 +14,8 @@ SYNERGY_WEIGHTS = {
     },
     "exhaust": {
         "exhaust": 1.5,
+    },
+    "vulnerable_scaling": {
+        "vulnerability": 2,
     },
 }
