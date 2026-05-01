@@ -31,8 +31,8 @@ def analyze_deck_service(deck: list[Card]):
         "tags": {},
         "card_scores": [],
         "avg_score": 0,
-        "type_distribution": {},
-        "energy_distribution": {},
+        # "type_distribution": {},
+        # "energy_distribution": {},
     }
 
     total_cost = 0

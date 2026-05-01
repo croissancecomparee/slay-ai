@@ -27,7 +27,7 @@ def analyze_deck_route(deck: list[CardDTO]):
     return analyze_deck_service(cards)
 
 @router.post("/cards/scores")
-def get_cards_scores(cards: list[CardDTO]):
+def get_cards_scores(cards: list[CardDTO], deck_stats: dict | None = None):
     results = {}
     # print("get_cards_scores - cards", cards)
     for card in cards:

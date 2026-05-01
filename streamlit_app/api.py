@@ -24,7 +24,7 @@ def get_card_score(name):
         return None
     return response.json()
 
-def get_cards_scores(cards):
+def get_cards_scores(cards, deck_stats=None):
     '''
     retourne les donées sous forme:
     {
@@ -33,7 +33,13 @@ def get_cards_scores(cards):
         ...
     }
     '''
-    response = requests.post(f"{BASE_URL}/cards/scores", json=cards)
+    payload = {
+        "cards": cards
+    }
+    if deck_stats is not None:
+        payload["deck_stats"] = deck_stats
+
+    response = requests.post(f"{BASE_URL}/cards/scores", json=payload)
     if response.status_code != 200:
         print("Error:", response.status_code, response.text)
         return None
