@@ -1,7 +1,7 @@
 import textwrap
 import streamlit as st
 from domain.models.card import Card
-from api import get_cards_scores
+from api import get_cards_scores, analyze_deck
 from utils.score_utils import get_score_color
 from utils.rarity_color import get_rarity_color
 from utils.type_icon import get_type_icon
@@ -38,7 +38,16 @@ def render_deck_builder(cards):
         for card in filtered_cards
     ]
     # print(filtered_cards)
-    scores = get_cards_scores([card.to_dict() for card in filtered_cards])
+
+    # build deck list
+    deck_list = []
+    for card_name, item in st.session_state.deck.items():
+        card = item["card"]
+        count = item["count"]
+        deck_list.extend([card] * count)
+
+    deck_stats = analyze_deck(deck_list) if deck_list else None
+    scores = get_cards_scores([card.to_dict() for card in filtered_cards], deck_stats)
     # print("scores", scores)
     
     if not scores:
